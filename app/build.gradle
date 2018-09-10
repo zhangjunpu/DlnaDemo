@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        applicationId "com.bftv.dlnademo.sample"
+        minSdkVersion 17
+        targetSdkVersion 27
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/beans.xml'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+
+    // 打包apk
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (variant.buildType.name == "release") {
+                def date = new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("GMT+8"))
+                // 更改apk文件名
+                outputFileName = "DlnaDemo-${variant.versionName}-${variant.baseName}-${date}.apk"
+                // 更改apk打包路径
+//                def fileDir = output.outputFile.parentFile.parentFile.parentFile.path + "/DlnaDemo"
+//                variant.packageApplication.outputDirectory = new File(fileDir)
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+
+    api(name: 'adapter-recyclerview-release', ext: 'aar')
+
+    implementation project(':lib.dlna')
+}

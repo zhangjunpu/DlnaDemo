@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    api(name: 'debug-1.2.0', ext: 'aar')
+    api(name: 'lib.utils.gson-release', ext: 'aar')
+    api 'com.google.code.gson:gson:2.8.2'
+
+    // DLNA需要库
+    api 'org.eclipse.jetty:jetty-client:8.1.18.v20150929'
+    api 'org.eclipse.jetty:jetty-server:8.1.18.v20150929'
+    api 'org.eclipse.jetty:jetty-servlet:8.1.18.v20150929'
+    api 'org.seamless:seamless-util:1.1.1'
+    api 'org.seamless:seamless-http:1.1.1'
+    api 'org.seamless:seamless-xml:1.1.1'
+    api 'org.slf4j:slf4j-jdk14:1.7.25'
+}

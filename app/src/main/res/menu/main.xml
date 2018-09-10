@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.clingdemo.MainActivity">
+
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@mipmap/ic_refresh_white"
+        android:orderInCategory="101"
+        android:title="@string/refresh"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_router"
+        android:orderInCategory="100"
+        android:title="@string/switch_router" />
+
+    <item
+        android:id="@+id/action_log"
+        android:orderInCategory="100"
+        android:title="@string/log_toggle" />
+
+</menu>
