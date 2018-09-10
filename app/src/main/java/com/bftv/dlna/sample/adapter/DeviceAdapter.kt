@@ -1,4 +1,4 @@
-package com.bftv.dlnademo.adapter
+package com.bftv.dlna.sample.adapter
 
 import android.content.Context
 import android.view.View
@@ -10,14 +10,14 @@ import com.bftv.dlna.friendlyName
 import com.bftv.dlna.host
 import com.bftv.dlna.manufacturer
 import com.bftv.dlna.model.DeviceDisplay
-import com.bftv.dlnademo.R.layout
-import com.bftv.dlnademo.inflate
+import com.bftv.dlna.sample.R
+import com.bftv.dlna.sample.inflate
 import kotlinx.android.synthetic.main.device_item.view.*
 
 class DeviceAdapter(context: Context) : BaseRecyclerAdapter<DeviceDisplay>(context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = context.inflate(layout.device_item, parent, false)
+        val view = context.inflate(R.layout.device_item, parent, false)
         return DeviceHolder(view, listener)
 
     }

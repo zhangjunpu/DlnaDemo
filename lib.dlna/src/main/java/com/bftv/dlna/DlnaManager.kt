@@ -55,9 +55,7 @@ class DlnaManager private constructor() {
         get() = upnpService?.get()?.router
 
     init {
-        org.seamless.util.logging.LoggingUtil.resetRootHandler(
-                FixedAndroidLogHandler()
-        )
+        org.seamless.util.logging.LoggingUtil.resetRootHandler(FixedAndroidLogHandler())
     }
 
     /**

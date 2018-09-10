@@ -1,4 +1,4 @@
-package com.bftv.dlnademo
+package com.bftv.dlna.sample
 
 import android.content.Context
 import android.view.LayoutInflater

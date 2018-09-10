@@ -1,4 +1,4 @@
-package com.bftv.dlnademo
+package com.bftv.dlna.sample
 
 import android.app.Application
 import com.abooc.widget.Toast

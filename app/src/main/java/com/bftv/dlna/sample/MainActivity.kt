@@ -1,4 +1,4 @@
-package com.bftv.dlnademo
+package com.bftv.dlna.sample
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -8,13 +8,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.Toast
 import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListener
 import com.abooc.util.Debug
 import com.bftv.dlna.*
 import com.bftv.dlna.model.DeviceDisplay
-import com.bftv.dlnademo.adapter.DeviceAdapter
+import com.bftv.dlna.sample.adapter.DeviceAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
