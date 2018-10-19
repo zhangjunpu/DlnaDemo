@@ -1,4 +1,4 @@
-package com.bftv.dlna
+package com.bftv.dlna.callback
 
 import com.bftv.dlna.model.DeviceDisplay
 

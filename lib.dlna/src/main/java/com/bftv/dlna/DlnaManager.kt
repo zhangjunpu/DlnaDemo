@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.abooc.util.Debug
 import com.abooc.widget.Toast
+import com.bftv.dlna.callback.OnDiscoveryListener
 import com.bftv.dlna.service.AppUpnpService
 import org.fourthline.cling.android.AndroidUpnpService
 import org.fourthline.cling.android.FixedAndroidLogHandler
@@ -17,7 +18,7 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
- *
+ * DLNA管理
  * @author Junpu
  * @time 2018/5/17 15:31
  */
@@ -33,7 +34,6 @@ class DlnaManager private constructor() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             Debug.out("DlnaManager.onServiceConnected:  ---> DLNA服务启动")
-            Debug.anchor()
             upnpService = service as? AndroidUpnpService
             upnpService?.registry?.addListener(dlnaRegisterListener)
 
@@ -42,7 +42,7 @@ class DlnaManager private constructor() {
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
-            // 走不到这，所以不放在这里
+            // 走不到这，所以注销方法不放在这里
             Debug.out("DlnaManager.onServiceDisconnected: ---> DLNA服务关闭")
             upnpService = null
         }

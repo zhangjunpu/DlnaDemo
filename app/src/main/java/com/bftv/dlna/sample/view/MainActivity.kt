@@ -1,4 +1,4 @@
-package com.bftv.dlna.sample
+package com.bftv.dlna.sample.view
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -12,7 +12,9 @@ import android.widget.Toast
 import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListener
 import com.abooc.util.Debug
 import com.bftv.dlna.*
+import com.bftv.dlna.callback.OnDiscoveryListener
 import com.bftv.dlna.model.DeviceDisplay
+import com.bftv.dlna.sample.R
 import com.bftv.dlna.sample.adapter.DeviceAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 

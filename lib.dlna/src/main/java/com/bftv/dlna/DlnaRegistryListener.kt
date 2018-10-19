@@ -3,6 +3,7 @@ package com.bftv.dlna
 import android.os.Handler
 import android.os.Looper
 import com.abooc.util.Debug
+import com.bftv.dlna.callback.OnDiscoveryListener
 import com.bftv.dlna.model.DeviceDisplay
 import org.fourthline.cling.model.meta.Device
 import org.fourthline.cling.model.meta.LocalDevice
@@ -59,7 +60,7 @@ class DlnaRegistryListener : DefaultRegistryListener() {
     fun deviceAdded(device: Device<*, *, *>?) {
         Debug.out("DlnaRegistryListener.deviceAdded: ")
         logd(device?.friendlyName + ", " + device?.host)
-        if (device?.isAVTransport != true) {
+        if (device?.avTransportService == null) {
             Debug.out("当前设备不支持AVTransport服务...")
             return
         }

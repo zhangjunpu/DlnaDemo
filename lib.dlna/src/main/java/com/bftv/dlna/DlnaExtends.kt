@@ -6,7 +6,11 @@ import android.util.Log
 import com.bftv.dlna.model.DeviceDisplay
 import org.fourthline.cling.model.meta.Device
 import org.fourthline.cling.model.meta.RemoteDeviceIdentity
+import org.fourthline.cling.model.meta.Service
+import org.fourthline.cling.model.types.UDAServiceType
 import org.fourthline.cling.model.types.UDN
+import org.fourthline.cling.support.model.TransportInfo
+import org.fourthline.cling.support.model.TransportState
 import java.net.URI
 import java.net.URL
 
@@ -19,11 +23,14 @@ import java.net.URL
 val Device<*, *, *>.friendlyName: String?
     get() = details?.friendlyName
 
+val Device<*, *, *>.descriptorURL: URL?
+    get() = (identity as? RemoteDeviceIdentity)?.descriptorURL
+
 val Device<*, *, *>.host: String?
     get() = descriptorURL?.host
 
-val Device<*, *, *>.descriptorURL: URL?
-    get() = (identity as? RemoteDeviceIdentity)?.descriptorURL
+val Device<*, *, *>.port: Int
+    get() = descriptorURL?.port ?: -1
 
 val Device<*, *, *>.manufacturer: String?
     get() = details?.manufacturerDetails?.manufacturer
@@ -58,36 +65,29 @@ val Device<*, *, *>.udn: UDN?
 val Device<*, *, *>.uuid: String?
     get() = identity?.udn?.identifierString
 
-/**
- * 当前设备是否支持AVTransport服务
- */
-val Device<*, *, *>.isAVTransport: Boolean
-    get() {
-        if (services == null || services.isEmpty()) return false
-        return services.any { it?.serviceType?.type == "AVTransport" }
-    }
+val Device<*, *, *>.avTransportService: Service<*, *>?
+    get() = findService(UDAServiceType("AVTransport"))
+
+val Device<*, *, *>.renderingControlService: Service<*, *>?
+    get() = findService(UDAServiceType("RenderingControl"))
 
 fun Device<*, *, *>.log() {
     logd("device info : ====================================================================>")
     logd("friendlyName ---> $friendlyName")
     logd("host ---> $host")
+    logd("port ---> $port")
+    logd("descriptorURL ---> $descriptorURL")
     logd("uuid ---> $uuid")
     logd("manufacturer ---> $manufacturer")
     logd("modelName ---> $modelName")
     logd("modelDescription ---> $modelDescription")
     logd("modelNumber ---> $modelNumber")
     logd("hasServices ---> ${hasServices()}")
-    services.forEach {
-        logd("---------------------------------------->")
-        logd("serviceType ---> ${it.serviceType}")
-//        logd("serviceId ---> ${it.serviceId}")
-//        it.actions.forEach { logd("action ---> $it") }
-//        it.stateVariables.forEach { logd("stateVariables ---> $it") }
-    }
+    logd("---------------------------------------->")
+    services.forEach { logd("serviceType ---> ${it.serviceType}") }
     logd("---------------------------------------->")
     logd("type ---> $type")
     logd("icons ---> ${icons.size}")
-    icons.forEach { logd("icon ---> ${it.uri}") }
     logd("===========================================================================>")
 }
 
@@ -98,11 +98,14 @@ val DeviceDisplay.displayString: String?
 val DeviceDisplay.friendlyName: String?
     get() = device?.friendlyName
 
+val DeviceDisplay.descriptorURL: String?
+    get() = device?.descriptorURL.toString()
+
 val DeviceDisplay.host: String?
     get() = device?.host
 
-val DeviceDisplay.descriptorURL: String?
-    get() = device?.descriptorURL.toString()
+val DeviceDisplay.port: Int
+    get() = device?.port ?: -1
 
 val DeviceDisplay.manufacturer: String?
     get() = device?.manufacturer
@@ -122,6 +125,12 @@ val DeviceDisplay.uuid: String?
 val DeviceDisplay.isFullyHydrated: Boolean
     get() = device?.isFullyHydrated == true
 
+val DeviceDisplay.avTransportService: Service<*, *>?
+    get() = device?.avTransportService
+
+val DeviceDisplay.renderingControlService: Service<*, *>?
+    get() = device?.renderingControlService
+
 /**
  * 快速获取ip尾数
  */
@@ -139,3 +148,20 @@ fun DeviceDisplay.log() {
 fun logd(msg: String?) {
     Log.d("Upnp", msg)
 }
+
+
+val TransportInfo.isPlaying: Boolean
+    get() = currentTransportState == TransportState.PLAYING
+
+val TransportInfo.isPause: Boolean
+    get() = currentTransportState == TransportState.PAUSED_PLAYBACK
+
+val TransportInfo.isStop: Boolean
+    get() = currentTransportState == TransportState.STOPPED
+
+val TransportInfo.isNoMediaPresent: Boolean
+    get() = currentTransportState == TransportState.NO_MEDIA_PRESENT
+
+val TransportInfo.isTransitioning: Boolean
+    get() = currentTransportState == TransportState.TRANSITIONING
+
