@@ -18,7 +18,7 @@ class DeviceAdapter(context: Context) : BaseRecyclerAdapter<DeviceDisplay>(conte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = context.inflate(R.layout.device_item, parent, false)
-        return DeviceHolder(view, listener)
+        return DeviceHolder(view, listener, longClickListener)
 
     }
 
@@ -34,7 +34,8 @@ class DeviceAdapter(context: Context) : BaseRecyclerAdapter<DeviceDisplay>(conte
     }
 }
 
-class DeviceHolder(view: View, listener: OnRecyclerItemClickListener?) : BaseViewHolder<DeviceDisplay>(view, listener) {
+class DeviceHolder(view: View, listener: OnRecyclerItemClickListener?, longClickListener: OnRecyclerItemLongClickListener?) :
+        BaseViewHolder<DeviceDisplay>(view, listener, longClickListener) {
 
     override fun bindData(device: DeviceDisplay?) {
         itemView?.name?.text = device?.friendlyName

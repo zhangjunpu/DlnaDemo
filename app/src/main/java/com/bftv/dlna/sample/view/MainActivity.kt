@@ -10,12 +10,15 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListener
+import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemLongClickListener
 import com.abooc.util.Debug
 import com.bftv.dlna.*
 import com.bftv.dlna.callback.OnDiscoveryListener
 import com.bftv.dlna.model.DeviceDisplay
+import com.bftv.dlna.sample.DeviceCache
 import com.bftv.dlna.sample.R
 import com.bftv.dlna.sample.adapter.DeviceAdapter
+import com.bftv.dlna.sample.launch
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -23,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  * @author Junpu
  * @time 2018/5/17 18:45
  */
-open class MainActivity : AppCompatActivity(), OnRecyclerItemClickListener {
+class MainActivity : AppCompatActivity(), OnRecyclerItemClickListener, OnRecyclerItemLongClickListener {
 
     private val dlnaManager by lazy { DlnaManager.instance }
     private var adapter: DeviceAdapter? = null
@@ -39,6 +42,7 @@ open class MainActivity : AppCompatActivity(), OnRecyclerItemClickListener {
         recyclerView?.layoutManager = LinearLayoutManager(this)
         adapter = DeviceAdapter(this)
         adapter?.setOnRecyclerItemClickListener(this)
+        adapter?.setOnRecyclerItemLongClickListener(this)
         recyclerView?.adapter = adapter
     }
 
@@ -89,6 +93,12 @@ open class MainActivity : AppCompatActivity(), OnRecyclerItemClickListener {
     }
 
     override fun onItemClick(recyclerView: RecyclerView?, itemView: View?, position: Int) {
+        val device = adapter?.getItem(position) ?: return
+        DeviceCache.device = device
+        launch(ControlActivity::class.java)
+    }
+
+    override fun onItemLongClick(recyclerView: RecyclerView?, itemView: View?, position: Int) {
         val device = adapter?.getItem(position) ?: return
         val sb = StringBuilder()
         sb.append("IP：${device.host}\n")

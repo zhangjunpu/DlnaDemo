@@ -12,7 +12,6 @@ import com.bftv.dlna.service.AppUpnpService
 import org.fourthline.cling.android.AndroidUpnpService
 import org.fourthline.cling.android.FixedAndroidLogHandler
 import org.fourthline.cling.model.meta.Device
-import org.fourthline.cling.transport.Router
 import org.fourthline.cling.transport.RouterException
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -30,6 +29,7 @@ class DlnaManager private constructor() {
 
     private var upnpService: AndroidUpnpService? = null
     private val dlnaRegisterListener by lazy { DlnaRegistryListener() }
+    private var dlnaControlManager: DlnaControlManager? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -48,14 +48,24 @@ class DlnaManager private constructor() {
         }
     }
 
+    /**
+     * 设备列表
+     */
     val devices: Collection<Device<*, *, *>>?
         get() = upnpService?.registry?.devices
 
-    private val router: Router?
-        get() = upnpService?.get()?.router
-
     init {
         org.seamless.util.logging.LoggingUtil.resetRootHandler(FixedAndroidLogHandler())
+    }
+
+    /**
+     * 获取DLNAControlManager
+     */
+    fun getDlnaControlManager(): DlnaControlManager? {
+        if (dlnaControlManager == null) {
+            upnpService?.let { dlnaControlManager = DlnaControlManager(it) }
+        }
+        return dlnaControlManager
     }
 
     /**
@@ -74,44 +84,41 @@ class DlnaManager private constructor() {
         context.applicationContext.unbindService(serviceConnection)
     }
 
+    /**
+     * 搜索设备
+     */
     fun search() {
         upnpService?.controlPoint?.search()
-//        upnpService?.controlPoint?.search(ServiceTypeHeader(UDAServiceType("AVTransport")))z
+//        upnpService?.controlPoint?.search(ServiceTypeHeader(UDAServiceType("AVTransport")))
 //        upnpService?.controlPoint?.search(STAllHeader())
     }
 
+    /**
+     * 清空设备列表
+     */
     fun removeAllRemoteDevice() {
         upnpService?.registry?.removeAllRemoteDevices()
     }
 
+    /**
+     * 注册发现设备回调
+     */
     fun registerDiscoveryListener(listener: OnDiscoveryListener?) {
         dlnaRegisterListener.addDiscoveryListener(listener)
     }
 
+    /**
+     * 注销发现设备回调
+     */
     fun unregisterDiscoveryListener(listener: OnDiscoveryListener?) {
         dlnaRegisterListener.removeDiscoveryListener(listener)
     }
 
-
-    fun turnOnRouter() {
-        try {
-            Debug.anchor("enable")
-            router?.enable()
-        } catch (e: RouterException) {
-            Debug.printStackTrace(e)
-        }
-    }
-
-    fun turnOffRouter() {
-        try {
-            router?.disable()
-        } catch (e: RouterException) {
-            Debug.printStackTrace(e)
-        }
-    }
-
+    /**
+     * Notwork ON/OFF
+     */
     fun switchRouter() {
-        router?.let {
+        upnpService?.get()?.router?.let {
             try {
                 if (it.isEnabled) {
                     Toast.show("关闭")
@@ -126,11 +133,17 @@ class DlnaManager private constructor() {
         }
     }
 
+    /**
+     * 是否开启DLNA log
+     */
     fun setLoggerEnable(enable: Boolean) {
         val logger = Logger.getLogger("org.fourthline.cling")
         if (enable) logger?.level = Level.FINEST else logger?.level = Level.INFO
     }
 
+    /**
+     * log ON/OFF
+     */
     fun switchLogger() {
         val logger = Logger.getLogger("org.fourthline.cling")
         if (logger.level != null && logger.level != Level.INFO) {

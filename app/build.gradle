@@ -55,6 +55,8 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$support_version"
 
     api(name: 'adapter-recyclerview-release', ext: 'aar')
+    api(name: 'lib.resources-release', ext: 'aar')
+    api(name: 'lib_mvp-release', ext: 'aar')
 
     implementation project(':lib.dlna')
 }
